@@ -52,4 +52,8 @@ WaitGroup.prototype.done = function WaitGroupDone(){
     }
 };
 
-exports.WaitGroup = WaitGroup;
+WaitGroup.prototype.allDone = function(fn) {
+    this.callback = fn;
+};
+
+module.exports = WaitGroup;
