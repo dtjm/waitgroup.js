@@ -1,4 +1,10 @@
-if(typeof(require) !== "undefined") var WaitGroup = require("./waitgroup");
+(function(){
+
+if(typeof(require) !== "undefined") {
+    var WaitGroup = require("../lib/waitgroup");
+} else {
+    var WaitGroup = window.WaitGroup;
+}
 
 var initResource = function(name, callback){
     var rnd = Math.random() * 2000;
@@ -35,4 +41,4 @@ wg.wait(function(){
                 "\nalpha =", alpha, "\nbeta =", beta, "\ngamma =", gamma);
 });
 
-
+})();
