@@ -1,28 +1,38 @@
-var waitgroup = require("./waitgroup");
+if(typeof(require) !== "undefined") var WaitGroup = require("./waitgroup");
 
 var initResource = function(name, callback){
+    var rnd = Math.random() * 2000;
     setTimeout(function(){
         console.log(name + " initialized");
-        callback();
-    }, Math.random()*3000);
+        callback(rnd);
+    }, rnd);
 };
 
-
-var wg = new waitgroup.WaitGroup(function(){
-    console.log("All done");
-});
+var wg = new WaitGroup();
+var alpha, beta, gamma;
 
 // We will initialize 3 resources
-wg.add(3);
-
-initResource("alpha", function(){
+wg.add();
+initResource("alpha", function(val){
+    alpha = val;
     wg.done();
 });
 
-initResource("beta", function(){
+wg.add();
+initResource("beta", function(val){
+    beta = val;
     wg.done();
 });
 
-initResource("gamma", function(){
+wg.add();
+initResource("gamma", function(val){
+    gamma = val;
     wg.done();
 });
+
+wg.wait(function(){
+    console.log("All done",
+                "\nalpha =", alpha, "\nbeta =", beta, "\ngamma =", gamma);
+});
+
+

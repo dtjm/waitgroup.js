@@ -1,32 +1,24 @@
-// WaitGroup
-// ---------
-// Taken from Go's sync.WaitGroup type. Use this if you want initialize
-// multiple resources concurrently, then run a callback only when they are all
-// done.
+// Copyright (c) 2012 Sam Nguyen <samxnguyen@gmail.com>
 //
-//     var WaitGroup = require("waitgroup");
+// Permission is hereby granted, free of charge, to any person obtaining a copy
+// of this software and associated documentation files (the "Software"), to deal
+// in the Software without restriction, including without limitation the rights
+// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+// copies of the Software, and to permit persons to whom the Software is
+// furnished to do so, subject to the following conditions:
 //
-//     var wg = new WaitGroup(function(){
-//         console.log("All done!");
-//     });
+// The above copyright notice and this permission notice shall be included in
+// all copies or substantial portions of the Software.
 //
-//     waitGroup.add(3);
-//
-//     initResource1().on("done", function(){
-//         waitGroup.done();
-//     });
-//
-//     initResource2().on("done", function(){
-//         waitGroup.done();
-//     });
-//
-//     initResource3().on("done", function(){
-//         waitGroup.done();
-//     });
-//
-// You don't know what order they will finish in, but the callback will be
-// called when they are all done.
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+// SOFTWARE.
 
+(function(){
 var WaitGroup = function(fn){
     this.total = 0; // Number of total items
     this.ready = 0; // Number of items ready
@@ -34,26 +26,31 @@ var WaitGroup = function(fn){
     this.complete = false;  // WaitGroup has already completed
 };
 
-// Add a member to the waitgroup.
-// @params Number of members to add to the wait group. Defaults to 1
-WaitGroup.prototype.add = function WaitGroupAdd(num){
-    if(!num) {
-        num = 1;
-    }
-    this.total += num;
+WaitGroup.prototype.add = function WaitGroupAdd(){
+    this.total++;
 };
 
-// Call this when a wait group member is complete. If all are complete, the 
-// callback will be executed.
 WaitGroup.prototype.done = function WaitGroupDone(){
     this.ready++;
     if(this.ready === this.total) {
-        this.callback();
+        var self = this;
+        // Defer this call just in case one of the tasks is not performed
+        // asynchronously
+        setTimeout(function(){self.callback();}, 0);
     }
 };
 
-WaitGroup.prototype.allDone = function(fn) {
+WaitGroup.prototype.wait = function(fn) {
     this.callback = fn;
 };
 
-module.exports = WaitGroup;
+// Export to node.js
+if(typeof(module) !== "undefined") {
+    module.exports = WaitGroup;
+}
+// Export to browser
+else {
+    window.WaitGroup = WaitGroup;
+}
+
+})();

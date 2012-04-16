@@ -1,0 +1,16 @@
+<html>
+    <head>
+        <script src="./waitgroup.js"></script>
+        <script src="./test.js"></script>
+        <script>
+            console.log = function() {
+                var pre = document.getElementsByTagName("pre")[0];
+                pre.innerText += Array.prototype.join.call(arguments, " ") + "\n";
+            };
+        </script>
+    </head>
+    <body>
+        <h1>waitgroup.js test page</h1>
+        <pre></pre>
+    </body>
+</html>
