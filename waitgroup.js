@@ -35,8 +35,14 @@ WaitGroup.prototype.done = function WaitGroupDone(){
     if(this.ready === this.total) {
         var self = this;
         // Defer this call just in case one of the tasks is not performed
-        // asynchronously
-        setTimeout(function(){self.callback();}, 0);
+        // asynchronously. In that case, the callback would have been
+        // called before the callback was assigned through the wait
+        // function
+        setTimeout(function(){
+            if(self.ready == self.total) {
+                self.callback();
+            }
+        }, 0);
     }
 };
 
