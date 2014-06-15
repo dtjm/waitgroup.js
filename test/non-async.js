@@ -1,7 +1,7 @@
 (function(){
 
 if(typeof(require) !== "undefined") {
-    var WaitGroup = require("../lib/waitgroup");
+    var WaitGroup = require("../waitgroup");
 } else {
     var WaitGroup = window.WaitGroup;
 }
