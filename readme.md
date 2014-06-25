@@ -14,26 +14,28 @@ making your requests concurrent.
 Usage
 -----
 
-    var wg = new WaitGroup;
+```js
+var wg = new WaitGroup;
 
-    wg.add();
-    initResource1().on("done", function(){
-        wg.done();
-    });
+wg.add();
+initResource1().on("done", function(){
+  wg.done();
+});
 
-    wg.add();
-    initResource2().on("done", function(){
-        wg.done();
-    });
+wg.add();
+initResource2().on("done", function(){
+  wg.done();
+});
 
-    wg.add();
-    initResource3().on("done", function(){
-        wg.done();
-    });
+wg.add();
+initResource3().on("done", function(){
+  wg.done();
+});
 
-    wg.wait(function(){
-        console.log("All done!")
-    });
+wg.wait(function(){
+  console.log("All done!")
+});
+```
 
 Methods
 -------
@@ -50,5 +52,6 @@ passed to `wait()` will be called.
 ### wait(func)
 
 Registers a callback to be called when all tasks in the WaitGroup are done.
+
 
 
