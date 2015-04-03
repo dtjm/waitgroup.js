@@ -19,11 +19,9 @@
 // SOFTWARE.
 
 (function(){
-var WaitGroup = function(fn){
+var WaitGroup = function(){
     this.total = 0; // Number of total items
     this.ready = 0; // Number of items ready
-    this.callback = fn; // Callback when waitgroup is ready
-    this.complete = false;  // WaitGroup has already completed
 };
 
 WaitGroup.prototype.add = function WaitGroupAdd(){
@@ -32,22 +30,14 @@ WaitGroup.prototype.add = function WaitGroupAdd(){
 
 WaitGroup.prototype.done = function WaitGroupDone(){
     this.ready++;
-    if(this.ready === this.total) {
-        var self = this;
-        // Defer this call just in case one of the tasks is not performed
-        // asynchronously. In that case, the callback would have been
-        // called before the callback was assigned through the wait
-        // function
-        setTimeout(function(){
-            if(self.ready == self.total) {
-                self.callback();
-            }
-        }, 0);
-    }
 };
 
 WaitGroup.prototype.wait = function(fn) {
-    this.callback = fn;
+  var self = this;
+  setTimeout(function(){
+    if(self.ready == self.total) return fn();
+    self.wait(fn);
+  }, 0);
 };
 
 // Export to node.js
