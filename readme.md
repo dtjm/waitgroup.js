@@ -53,5 +53,8 @@ passed to `wait()` will be called.
 
 Registers a callback to be called when all tasks in the WaitGroup are done.
 
+Tests
+-----
 
+Run the tests with `npm test`
 

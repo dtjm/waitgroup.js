@@ -1,5 +1,8 @@
 {
-    "version": "1.0.1",
+    "version": "1.1.0",
     "name": "waitgroup",
-    "main": "waitgroup.js"
+    "main": "waitgroup.js",
+    "scripts": {
+    	"test": "node test/non-async.js && node test/test.js"
+    }
 }
