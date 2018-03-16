@@ -22,23 +22,42 @@
 var WaitGroup = function(){
     this.total = 0; // Number of total items
     this.ready = 0; // Number of items ready
+    this.callbacks = [] // The wait callbacks
 };
 
 WaitGroup.prototype.add = function WaitGroupAdd(){
     this.total++;
+    if (hasToEmit(this)) {
+        emitCallbacks(this);
+    }
 };
 
 WaitGroup.prototype.done = function WaitGroupDone(){
     this.ready++;
+    if (hasToEmit(this)) {
+        emitCallbacks(this);
+    }
 };
 
 WaitGroup.prototype.wait = function(fn) {
-  var self = this;
-  setTimeout(function(){
-    if(self.ready == self.total) return fn();
-    self.wait(fn);
-  }, 0);
+    this.callbacks.push(fn);
+    if (hasToEmit(this)) {
+        emitCallbacks(this);
+    }
 };
+
+function hasToEmit(wg) {
+    return wg.ready === wg.total;
+}
+
+function emitCallbacks(wg) {
+    var callbacks = wg.callbacks;
+    for (var i = 0; i < callbacks.length; i++) {
+        var cb = callbacks[i];
+        cb();
+    }
+    wg.callbacks = [];
+}
 
 // Export to node.js
 if(typeof(module) !== "undefined") {
